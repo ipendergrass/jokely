@@ -1,6 +1,71 @@
 <template>
   <v-layout column>
-      Welcome, {{$store.state.user.info.displayName}}!!
+    Welcome, {{$store.state.user.info.displayName}}!!
+    <v-layout row>
+      <v-flex auto>
+        <v-card>
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">Recent Jokes</h3>
+              <v-list two-line>
+                <template v-for="(item, index) in jokes">
+                  <v-subheader
+                    v-if="item.title"
+                    :key="item.title"
+                  >
+                    {{ item.title }}
+                    {{ $moment() }}
+                  </v-subheader>
+                </template>
+              </v-list>
+            </div>
+          </v-card-title>
+
+          <v-card-actions>
+            <v-btn flat color="orange">Create Joke</v-btn>
+            <v-btn flat color="orange">Explore</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-card>
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">Recent Ideas</h3>
+              <v-list two-line>
+                <template v-for="(item, index) in ideas">
+                  <v-subheader
+                    v-if="item.content"
+                    :key="item.id">
+                    {{ item.content }}
+                    {{ $moment(item.created) }}
+                  </v-subheader>
+                </template>
+              </v-list>
+            </div>
+          </v-card-title>
+
+          <v-card-actions>
+            <v-btn flat color="orange">Explore</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+      <v-flex auto>
+        <v-card>
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">Upcoming Dates</h3>
+              <div> {{ card_text }} </div>
+            </div>
+          </v-card-title>
+
+          <v-card-actions>
+            <v-btn flat color="orange">Add</v-btn>
+            <v-btn flat color="orange">See More</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-layout>
 </template>
 <script>
@@ -10,6 +75,9 @@ export default {
   name: 'Dashboard',
   data () {
     return {
+      card_text: '',
+      jokes: [],
+      ideas: []
     }
   },
   mounted () {
@@ -21,6 +89,22 @@ export default {
   methods: {
   },
   created () {
+    let mis = this
+    this.$db.collection("data").doc(this.$firebase.auth().currentUser.uid).collection("jokes")
+    .get().then(function(docs) {
+      docs.forEach(function (doc) {
+        console.log(doc.data())
+        mis.jokes.push(doc.data())
+      })
+    })
+
+    this.$db.collection("data").doc(this.$firebase.auth().currentUser.uid).collection("ideas")
+    .get().then(function(ideas) {
+      ideas.forEach(function (idea) {
+        console.log(idea.data())
+        mis.ideas.push(idea.data())
+      })
+    })
   }
 }
 </script>

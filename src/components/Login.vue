@@ -73,7 +73,7 @@ export default {
     }
   },
   created () {
-    console.log(this.$firebase)
+    console.log(this.$firebase.auth.Auth)
   }
 }
 </script>

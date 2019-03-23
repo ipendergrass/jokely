@@ -1,6 +1,6 @@
 # jokely
 
-> Online Joke writing software. 
+> A Vue.js project
 
 ## Build Setup
 

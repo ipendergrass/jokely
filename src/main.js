@@ -8,6 +8,7 @@ import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import VueQuillEditor from 'vue-quill-editor'
 import firebase from 'firebase'
 import store from './store'
+import moment from 'moment'
 
 // require styles
 import 'quill/dist/quill.core.css'
@@ -28,10 +29,21 @@ firebase.initializeApp(config)
 Vue.config.productionTip = false
 
 Vue.firebase = Vue.prototype.$firebase = firebase
-Vue.account = Vue.prototype.$account = 'a'
+Vue.db = Vue.prototype.$db = firebase.firestore()
 
 Vue.use(VueQuillEditor /*, { default global options } */)
 Vue.use(Vuetify)
+Vue.use(require('vue-moment'), {
+  moment
+})
+
+router.beforeEach((to, from, next) => {
+  if (store.state.user.info === null && to.name !== 'Login') {
+     next('/')
+   } else {
+     next()
+   }
+})
 
 /* eslint-disable no-new */
 new Vue({

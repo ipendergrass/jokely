@@ -90,6 +90,7 @@ export default {
   },
   methods: {
     save (current) {
+      console.log('entering save')
       let refString = '/jokes/' + this.$firebase.auth().currentUser.uid
       let data = null
       let ref = null
@@ -97,23 +98,31 @@ export default {
       if (current.id !== null) {
         refString = refString + '/' + current.id
         data = {
-          updated: timestamp,
-          title: current.title,
-          content: current.content
+         updated:  timestamp,
+         title: current.title,
+         content: current.content
         }
         let ref = this.$firebase.database().ref(refString)
         ref.update(data)
-      } else {
+      } else { 
         ref = this.$firebase.database().ref(refString).push()
         this.current.id = ref.key
         data = {
-          created: timestamp,
-          updated: timestamp,
+          created:  timestamp,
+          updated:  timestamp,
           title: current.title,
           content: current.content
         }
         ref.set(data)
       }
+      console.log(this.$db)
+      this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').add(data).then(function (docref) {
+        console.log("Document written with ID: ", docRef.id);
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+      console.log('exiting save')
     },
     onEditorBlur (editor) {
       // console.log('editor blur!', editor)
