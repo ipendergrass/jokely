@@ -1,8 +1,17 @@
 <template>
   <v-layout>
-    <v-btn @click="Login('facebook')">Facebook</v-btn>
-    <v-btn @click="Login('twitter')">Twitter</v-btn>
-    <v-btn @click="Login('google')">Google</v-btn>
+    <v-flex column>
+      <v-flex style="height: 25vh">
+        <span style="font-size: 35pt">Let's get you logged in.</span>
+        <br/>
+        <span style="font-size: 25pt">Choose your favorite:</span>
+      </v-flex>
+      <v-flex align-center>
+        <v-btn style="height: 200px; width: 200px" fab @click="Login('google')"><v-icon size="100px" color="#DB4437">fab fa-google</v-icon></v-btn>
+        <v-btn style="height: 200px; width: 200px" fab @click="Login('facebook')"><v-icon size="100px" color="#3b5998">fab fa-facebook-f</v-icon></v-btn>
+        <v-btn style="height: 200px; width: 200px" fab @click="Login('twitter')"><v-icon size="100px" color="#1DA1F2">fab fa-twitter</v-icon></v-btn>
+      </v-flex>
+    </v-flex>
   </v-layout>
 </template>
 <script>

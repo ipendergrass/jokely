@@ -13,7 +13,7 @@
 
         <v-list-tile avatar tag="div">
           <v-list-tile-avatar>
-            <img :src="this.$store.state.user.info.photoUrl">
+            <img  style="height: 55px; width: 55px" :src="this.$store.state.user.info.photoUrl">
           </v-list-tile-avatar>
 
           <v-list-tile-content>
@@ -68,12 +68,12 @@ export default {
       newIdea: '',
       drawer: true,
       items: [
-        { title: 'Dashboard', icon: 'dashboard' },
-        { title: 'Ideas', icon: 'highlight' },
-        { title: 'Jokes', icon: 'mic' },
-        { title: 'Sets', icon: 'library_books' },
-        { title: 'Editor', icon: 'create' },
-        { title: 'Logout', icon: 'clear' }
+        { title: `Dashboard`, icon: `dashboard` },
+        { title: `Ideas`, icon: `highlight` },
+        { title: `Jokes`, icon: `mic` },
+        { title: `Sets`, icon: `library_books` },
+        { title: `Editor`, icon: `create` },
+        { title: `Logout`, icon: `clear` }
       ],
       mini: true,
       right: null
@@ -82,16 +82,12 @@ export default {
   methods: {
     uploadIdea () {
       let mis = this
-      this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas').add({ content: this.newIdea, created: Date.now() }).then(function (docref) {
+      this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas').add({ content: this.newIdea, created: Date.now() }).then(function (docRef) {
         mis.newIdea = ''
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function (error) {
+        console.log('Document written with ID: ', docRef.id)
+      }).catch(function (error) {
         console.log(error)
       })
-    },
-    onClick (action) {
-      console.log(action)
     },
     activeColor (item) {
       if (this.$route.name === item.title) {

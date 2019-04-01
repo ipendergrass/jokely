@@ -19,7 +19,6 @@ export default {
   computed: {
   },
   methods: {
-    
   },
   created () {
     console.log(this.$store.state.user.info)

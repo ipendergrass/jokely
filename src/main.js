@@ -9,6 +9,7 @@ import VueQuillEditor from 'vue-quill-editor'
 import firebase from 'firebase'
 import store from './store'
 import moment from 'moment'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 // require styles
 import 'quill/dist/quill.core.css'
@@ -31,6 +32,9 @@ Vue.config.productionTip = false
 Vue.firebase = Vue.prototype.$firebase = firebase
 Vue.db = Vue.prototype.$db = firebase.firestore()
 
+Vue.use(Vuetify, {
+  iconfont: 'mdi' || 'fa' // 'md' || 'mdi' || 'fa' || 'fa4'
+})
 Vue.use(VueQuillEditor /*, { default global options } */)
 Vue.use(Vuetify)
 Vue.use(require('vue-moment'), {
@@ -39,10 +43,10 @@ Vue.use(require('vue-moment'), {
 
 router.beforeEach((to, from, next) => {
   if (store.state.user.info === null && to.name !== 'Login') {
-     next('/')
-   } else {
-     next()
-   }
+    next('/')
+  } else {
+    next()
+  }
 })
 
 /* eslint-disable no-new */

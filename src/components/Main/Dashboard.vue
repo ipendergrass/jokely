@@ -6,9 +6,9 @@
         <v-card>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">Recent Jokes</h3>
+              <h3 class="headline mb-0">Jokes</h3>
               <v-list two-line>
-                <template v-for="(item, index) in jokes">
+                <template v-for="item in $store.state.joke.list">
                   <v-subheader
                     v-if="item.title"
                     :key="item.title"
@@ -31,9 +31,9 @@
         <v-card>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">Recent Ideas</h3>
+              <h3 class="headline mb-0">Ideas</h3>
               <v-list two-line>
-                <template v-for="(item, index) in ideas">
+                <template v-for="item in ideas">
                   <v-subheader
                     v-if="item.content"
                     :key="item.id">
@@ -54,7 +54,7 @@
         <v-card>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">Upcoming Dates</h3>
+              <h3 class="headline mb-0">Dates</h3>
               <div> {{ card_text }} </div>
             </div>
           </v-card-title>
@@ -90,21 +90,37 @@ export default {
   },
   created () {
     let mis = this
-    this.$db.collection("data").doc(this.$firebase.auth().currentUser.uid).collection("jokes")
-    .get().then(function(docs) {
-      docs.forEach(function (doc) {
-        console.log(doc.data())
-        mis.jokes.push(doc.data())
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes')
+      .get().then(function (docs) {
+        docs.forEach(function (doc) {
+          console.log(doc.data())
+          mis.$store.commit('ADD_TO_JOKE_LIST', doc.data())
+        })
       })
-    })
 
-    this.$db.collection("data").doc(this.$firebase.auth().currentUser.uid).collection("ideas")
-    .get().then(function(ideas) {
-      ideas.forEach(function (idea) {
-        console.log(idea.data())
-        mis.ideas.push(idea.data())
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas')
+      .onSnapshot(function (idea) {
+        idea.docChanges().forEach(function (change) {
+          if (change.type === 'added') {
+            mis.ideas.push(change.doc.data())
+            console.log(change.doc.data())
+          }
+          if (change.type === 'modified') {
+            console.log(change.doc.data())
+          }
+          if (change.type === 'removed') {
+            console.log(change.doc.data())
+          }
+        })
       })
-    })
+
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas')
+      .get().then(function (ideas) {
+        ideas.forEach(function (idea) {
+          console.log(idea.data())
+          mis.ideas.push(idea.data())
+        })
+      })
   }
 }
 </script>
