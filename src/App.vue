@@ -13,7 +13,7 @@
 
         <v-list-tile avatar tag="div">
           <v-list-tile-avatar>
-            <img  style="height: 55px; width: 55px" :src="this.$store.state.user.info.photoUrl">
+            <img :src="this.$store.state.user.info.photoUrl">
           </v-list-tile-avatar>
 
           <v-list-tile-content>

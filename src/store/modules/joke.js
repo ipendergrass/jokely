@@ -1,5 +1,6 @@
 const state = {
   current: null,
+  dashList: [],
   list: []
 }
 
@@ -9,6 +10,9 @@ const mutations = {
   },
   ADD_TO_JOKE_LIST (state, data) {
     state.list.push(data)
+  },
+  ADD_TO_DASH_LIST (state, data) {
+    state.dashList.push(data)
   }
 }
 

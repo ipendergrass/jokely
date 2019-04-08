@@ -3,18 +3,24 @@
     Welcome, {{$store.state.user.info.displayName}}!!
     <v-layout row>
       <v-flex auto>
-        <v-card>
+        <v-card class="data-card">
           <v-card-title primary-title>
-            <div>
+            <div style="width: 100%">
               <h3 class="headline mb-0">Jokes</h3>
               <v-list two-line>
                 <template v-for="item in $store.state.joke.list">
                   <v-subheader
                     v-if="item.title"
-                    :key="item.title"
-                  >
-                    {{ item.title }}
-                    {{ $moment() }}
+                    :key="item.id">
+                    <v-layout row>
+                      <v-flex justify-start style="text-align: left">
+                        {{ item.title }}
+                      </v-flex>
+                      <v-flex auto justify-end style="text-align: right">
+                        <v-icon>edit</v-icon>
+                        <v-icon @click="remove(item)">delete</v-icon>
+                      </v-flex>
+                    </v-layout>
                   </v-subheader>
                 </template>
               </v-list>
@@ -27,18 +33,25 @@
           </v-card-actions>
         </v-card>
       </v-flex>
-      <v-flex>
-        <v-card>
+      <v-flex auto>
+        <v-card class="data-card">
           <v-card-title primary-title>
-            <div>
+            <div style="width: 100%">
               <h3 class="headline mb-0">Ideas</h3>
               <v-list two-line>
                 <template v-for="item in ideas">
                   <v-subheader
                     v-if="item.content"
                     :key="item.id">
-                    {{ item.content }}
-                    {{ $moment(item.created) }}
+                    <v-layout row>
+                      <v-flex justify-start style="text-align: left">
+                        {{ item.content }}
+                      </v-flex>
+                      <v-flex auto justify-end style="text-align: right">
+                        <v-icon>edit</v-icon>
+                        <v-icon>delete</v-icon>
+                      </v-flex>
+                    </v-layout>
                   </v-subheader>
                 </template>
               </v-list>
@@ -51,7 +64,7 @@
         </v-card>
       </v-flex>
       <v-flex auto>
-        <v-card>
+        <v-card class="data-card">
           <v-card-title primary-title>
             <div>
               <h3 class="headline mb-0">Dates</h3>
@@ -87,18 +100,42 @@ export default {
   computed: {
   },
   methods: {
+    remove (item) {
+      console.log(item)
+      let mis = this
+      this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').doc(item.id).delete().then(() => {
+        
+      })
+    }
   },
   created () {
     let mis = this
-    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes')
-      .get().then(function (docs) {
-        docs.forEach(function (doc) {
-          console.log(doc.data())
-          mis.$store.commit('ADD_TO_JOKE_LIST', doc.data())
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').limit(5)
+      .onSnapshot(function (joke) {
+        joke.docChanges().forEach(function (change) {
+          if (change.type === 'added') {
+            console.log(change)
+            let joke = change.doc.data()
+            joke.id = change.doc.id
+            mis.$store.commit('ADD_TO_JOKE_LIST', joke)
+            console.log(joke)
+          }
+          if (change.type === 'modified') {
+            console.log(change.doc.data())
+          }
+          if (change.type === 'removed') {
+            console.log(change.doc.data())
+          }
         })
       })
+      // .get().then(function (docs) {
+      //   docs.forEach(function (doc) {
+      //     console.log(doc.data())
+      //     mis.$store.commit('ADD_TO_JOKE_LIST', doc.data())
+      //   })
+      // })
 
-    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas')
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas').limit(5)
       .onSnapshot(function (idea) {
         idea.docChanges().forEach(function (change) {
           if (change.type === 'added') {
@@ -114,13 +151,13 @@ export default {
         })
       })
 
-    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas')
-      .get().then(function (ideas) {
-        ideas.forEach(function (idea) {
-          console.log(idea.data())
-          mis.ideas.push(idea.data())
-        })
-      })
+    // this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas')
+    //   .get().then(function (ideas) {
+    //     ideas.forEach(function (idea) {
+    //       console.log(idea.data())
+    //       mis.ideas.push(idea.data())
+    //     })
+    //   })
   }
 }
 </script>
@@ -140,5 +177,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.data-card {
+  margin: 0px 10px 0px 10px;
 }
 </style>

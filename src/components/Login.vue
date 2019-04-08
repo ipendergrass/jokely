@@ -8,8 +8,8 @@
       </v-flex>
       <v-flex align-center>
         <v-btn style="height: 200px; width: 200px" fab @click="Login('google')"><v-icon size="100px" color="#DB4437">fab fa-google</v-icon></v-btn>
-        <v-btn style="height: 200px; width: 200px" fab @click="Login('facebook')"><v-icon size="100px" color="#3b5998">fab fa-facebook-f</v-icon></v-btn>
         <v-btn style="height: 200px; width: 200px" fab @click="Login('twitter')"><v-icon size="100px" color="#1DA1F2">fab fa-twitter</v-icon></v-btn>
+        <v-btn style="height: 200px; width: 200px" fab @click="Login('facebook')"><v-icon size="100px" color="#3b5998">fab fa-facebook-f</v-icon></v-btn>
       </v-flex>
     </v-flex>
   </v-layout>

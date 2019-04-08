@@ -91,36 +91,37 @@ export default {
   methods: {
     save (current) {
       console.log('entering save')
-      let refString = '/jokes/' + this.$firebase.auth().currentUser.uid
+      let mis = this
       let data = null
-      let ref = null
       let timestamp = Date.now()
-      if (current.id !== null) {
-        refString = refString + '/' + current.id
+      if (current.id === null) {
         data = {
           updated: timestamp,
           title: current.title,
-          content: current.content
+          created: timestamp
         }
-        let ref = this.$firebase.database().ref(refString)
-        ref.update(data)
+        this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').add(data).then(function (docRef) {
+         console.log('Document written with ID: ', docRef.id)
+         // data.id = docRef.id
+         docRef.collection('content').add({body: current.content})
+        }).catch(function (error) {
+          console.log(error)
+        })
+        // this.$firebase.database().ref(refString2).doc({body: data.content})
+        // ref.set(data)
       } else {
+        let refString = '/data/' + this.$firebase.auth().currentUser.uid + '/jokes/' + this.current.id
         ref = this.$firebase.database().ref(refString).push()
-        this.current.id = ref.key
         data = {
-          created: timestamp,
+          // id: current.id,
           updated: timestamp,
-          title: current.title,
-          content: current.content
+          title: current.title
         }
-        ref.set(data)
+        ref.update(data).then(() => {
+          ref.collection('content').add({body: current.content})
+        })
       }
-      console.log(this.$db)
-      this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').add(data).then(function (docRef) {
-        console.log('Document written with ID: ', docRef.id)
-      }).catch(function (error) {
-        console.log(error)
-      })
+      // console.log(this.$db)
       console.log('exiting save')
     },
     onEditorBlur (editor) {
