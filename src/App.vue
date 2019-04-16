@@ -48,8 +48,8 @@
           </v-flex>
           <v-flex align-end v-if="$store.state.user.info !== null">
             <v-layout row>
-              <v-text-field v-model="newIdea" align-content-end placeholder="Got a new idea?" solo></v-text-field>
-              <v-btn fab dark color="orange" @click="uploadIdea" style="top: -10px">
+              <v-text-field v-model="newIdea" align-content-end placeholder="Got a new idea?" solo v-on:keyup="sendOnEnter"></v-text-field>
+              <v-btn fab dark color="orange" @click="uploadIdea" :disabled="newIdea === '' || newIdea === null || newIdea === undefined" style="top: -10px">
                 <v-icon dark>cloud_upload</v-icon>
               </v-btn>
             </v-layout>
@@ -80,6 +80,11 @@ export default {
     }
   },
   methods: {
+    sendOnEnter (e){
+       if (e.keyCode === 13) {
+         this.uploadIdea()
+       }
+    },
     uploadIdea () {
       let mis = this
       this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas').add({ content: this.newIdea, created: Date.now() }).then(function (docRef) {

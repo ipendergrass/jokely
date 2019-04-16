@@ -18,7 +18,7 @@
                       </v-flex>
                       <v-flex auto justify-end style="text-align: right">
                         <v-icon>edit</v-icon>
-                        <v-icon @click="remove(item)">delete</v-icon>
+                        <v-icon @click="remove('jokes', item)">delete</v-icon>
                       </v-flex>
                     </v-layout>
                   </v-subheader>
@@ -49,7 +49,7 @@
                       </v-flex>
                       <v-flex auto justify-end style="text-align: right">
                         <v-icon>edit</v-icon>
-                        <v-icon>delete</v-icon>
+                        <v-icon  @click="remove('ideas', item)">delete</v-icon>
                       </v-flex>
                     </v-layout>
                   </v-subheader>
@@ -100,11 +100,12 @@ export default {
   computed: {
   },
   methods: {
-    remove (item) {
-      console.log(item)
+    remove (category, item) {
       let mis = this
-      this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').doc(item.id).delete().then(() => {
-        
+      console.log(category)
+      console.log(item)
+      this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection(category).doc(item.id).delete().then(() => {
+        console.log('Deleted: ' + item.id)
       })
     }
   },
@@ -135,11 +136,13 @@ export default {
       //   })
       // })
 
-    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas').limit(5)
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('ideas').limit(20)
       .onSnapshot(function (idea) {
         idea.docChanges().forEach(function (change) {
           if (change.type === 'added') {
-            mis.ideas.push(change.doc.data())
+            let idea = change.doc.data()
+            idea.id = change.doc.id
+            mis.ideas.push(idea)
             console.log(change.doc.data())
           }
           if (change.type === 'modified') {

@@ -103,8 +103,13 @@ export default {
         this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').add(data).then(function (docRef) {
          console.log('Document written with ID: ', docRef.id)
          // data.id = docRef.id
-         docRef.collection('content').add({body: current.content})
+         docRef.collection('content').add({body: current.content}).then(() => {           
+          console.log('exiting save')
+         }).catch((error) => {
+           console.log('didn\'t work')
+         })
         }).catch(function (error) {
+          console.log('I\'m here')
           console.log(error)
         })
         // this.$firebase.database().ref(refString2).doc({body: data.content})
@@ -122,7 +127,6 @@ export default {
         })
       }
       // console.log(this.$db)
-      console.log('exiting save')
     },
     onEditorBlur (editor) {
       // console.log('editor blur!', editor)
