@@ -15,10 +15,10 @@ admin.initializeApp();
  * cut-off time. Each child needs to have a `timestamp` attribute.
  */
 exports.deleteJokeContent = functions.firestore.document('/data/{user_id}/jokes/{joke_id}').onDelete((change, context) => {
-    console.log(context)
-    admin.firestore().collection('data').doc(context.params.user_id).collection('jokes').doc(change.id).collection('content').get().then(querySnapshot => {
+    let contentRef = admin.firestore().collection('data').doc(context.params.user_id).collection('jokes').doc(change.id).collection('content')
+   return  contentRef.get().then(querySnapshot => {
       querySnapshot.docs.forEach(doc => {
-        doc.delete()
+        contentRef.doc(doc.id).delete()
       })
     })
     // const ref = change.after.ref.parent; // reference to the parent

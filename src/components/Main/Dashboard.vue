@@ -14,7 +14,7 @@
                     :key="item.id">
                     <v-layout row>
                       <v-flex justify-start style="text-align: left">
-                        {{ item.title }}
+                        {{ item.title | truncate }}
                       </v-flex>
                       <v-flex auto justify-end style="text-align: right">
                         <v-icon>edit</v-icon>
@@ -45,7 +45,7 @@
                     :key="item.id">
                     <v-layout row>
                       <v-flex justify-start style="text-align: left">
-                        {{ item.content }}
+                        {{ item.content | truncate }}
                       </v-flex>
                       <v-flex auto justify-end style="text-align: right">
                         <v-icon>edit</v-icon>
@@ -66,7 +66,7 @@
       <v-flex auto>
         <v-card class="data-card">
           <v-card-title primary-title>
-            <div>
+            <div style="width: 100%">
               <h3 class="headline mb-0">Dates</h3>
               <div> {{ card_text }} </div>
             </div>
@@ -96,6 +96,14 @@ export default {
   mounted () {
   },
   beforeDestroy () {
+  },
+  filters: {
+    truncate (value) {
+      if (value.length > 50) {
+        return value.substr(0, 50) + '...'
+      }
+      return value
+    }
   },
   computed: {
   },
