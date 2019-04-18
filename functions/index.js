@@ -17,7 +17,7 @@ admin.initializeApp();
 exports.deleteJokeContent = functions.firestore.document('/data/{user_id}/jokes/{joke_id}').onDelete((change, context) => {
     console.log(context)
     admin.firestore().collection('data').doc(context.params.user_id).collection('jokes').doc(change.id).collection('content').get().then(querySnapshot => {
-      querySnapshot.doc.forEach(doc => {
+      querySnapshot.docs.forEach(doc => {
         doc.delete()
       })
     })
