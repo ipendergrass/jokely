@@ -81,9 +81,9 @@ export default {
   },
   methods: {
     sendOnEnter (e){
-       if (e.keyCode === 13) {
-         this.uploadIdea()
-       }
+      if (e.keyCode === 13) {
+        this.uploadIdea()
+      }
     },
     uploadIdea () {
       let mis = this

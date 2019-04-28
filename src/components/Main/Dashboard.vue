@@ -17,7 +17,7 @@
                         {{ item.title | truncate }}
                       </v-flex>
                       <v-flex auto justify-end style="text-align: right">
-                        <v-icon>edit</v-icon>
+                        <v-icon @click="edit('jokes', item)">edit</v-icon>
                         <v-icon @click="remove('jokes', item)">delete</v-icon>
                       </v-flex>
                     </v-layout>
@@ -108,6 +108,11 @@ export default {
   computed: {
   },
   methods: {
+    edit (category, item) {
+      let mis = this
+      this.$store.commit('SET_CURRENT_JOKE', item)
+      mis.$router.push({name: 'Editor'})
+    },
     remove (category, item) {
       let mis = this
       console.log(category)
@@ -119,7 +124,7 @@ export default {
   },
   created () {
     let mis = this
-    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').limit(5)
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').limit(10)
       .onSnapshot(function (joke) {
         joke.docChanges().forEach(function (change) {
           if (change.type === 'added') {

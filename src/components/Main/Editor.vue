@@ -32,34 +32,8 @@ export default {
       current: {
         id: null,
         title: null,
-        content: null
+        content: '<h1 class="ql-align-center"><span class="ql-font-serif"><span class="ql-cursor"></span>I am Example 3!</span></span></h1>'
       },
-      id: null,
-      title: 'New Joke',
-      msg: 'Welcome to Your Vue.js App',
-      name: 'Editor',
-      content: `<h1 class="ql-align-center">
-                <span class="ql-font-serif"><span class="ql-cursor"></span>I am Example 3!</span></span>
-                </h1>
-                <p><br></p>
-                <p><strong class="ql-font-serif">Whenever you play the game of thrones, you either win or die. There is no middle ground.</strong></p>
-                <p><br></p>
-                <p><u class="ql-font-serif">Some war against sword and spear to win, and the others the crow and the paper to win.</u></p>
-                <p><br></p>
-                <p><em class="ql-font-serif">Dead history is write in ink, the living sort in blood.</em></p>
-                <p><br></p>
-                <p><span class="ql-font-serif" style="color: rgb(0, 102, 204);">They're only numbers. Numbers on paper. Once you understand that, it's easy to make them behave.</span></p>
-                <p><br></p>
-                <p><span class="ql-font-serif">Every time we deal with an enemy, we create two more.</span></p>
-                <p><br></p>
-                <p><span class="ql-font-serif">So the king has decreed. The small council consents.</span></p>
-                <p><br></p>
-                <p><span class="ql-font-serif">Chaos not is a pit, chaos is a ladder.</span></p>
-                <p><br></p>
-                <p><span class="ql-font-serif">A chain needs all sorts of metals, and a land needs all sorts of people.</span></p>
-                <p><br></p>
-                <p><span class="ql-font-serif">When the snows fall and the white winds blow, the lone wolf dies, but the pack survives.</p>
-                `,
       editorOption: {
         modules: {
           toolbar: [
@@ -83,6 +57,17 @@ export default {
     }
   },
   mounted () {
+    let mis = this
+    this.current.id = this.$store.state.joke.current.id
+    this.current.title = this.$store.state.joke.current.title
+    this.current.content = this.$store.state.joke.current.content
+    console.log(this.current)
+    this.$db.collection('data').doc(this.$firebase.auth().currentUser.uid).collection('jokes').doc(this.current.id).collection('content').get().then(function (snap) {
+        let document = snap.docs[0].data()
+        console.log(document)
+        // mis.$store.commit('SET_CURRENT_JOKE_CONTENT', document.body)
+        mis.current.content = document.body
+      })
   },
   beforeDestroy () {
   },
